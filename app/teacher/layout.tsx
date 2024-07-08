@@ -1,8 +1,18 @@
 import Sidebar from "@/components/teacher/Sidebar";
 import Header from "@/components/teacher/Header";
 import { Button } from "@/components/ui/button";
+import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+import { redirect } from "next/navigation";
 
-export default function TeacherDashboardLayout({ children}: { children: React.ReactNode }) {
+export default async function TeacherDashboardLayout({ children}: { children: React.ReactNode }) {
+  
+  const { getUser } = getKindeServerSession();
+  const user = await getUser();
+
+  if (!user) {
+    return redirect("/");
+  }
+
   return (
     <div className="flex min-h-screen w-full flex-col">
       <Sidebar />
