@@ -1,29 +1,30 @@
 import { Button } from "@/components/ui/button";
 import { PlusCircle, UserRoundPlus, UsersRound } from "lucide-react";
+import Link from "next/link";
 
 export default function TeacherStudentsPage() {
   return (
-    <>
-    <div className="flex items-center">
-      <h1 className="text-xl font-semibold">Your Students</h1>
-      <div className="ml-auto flex items-center gap-2">
-        <Button size="sm" className="h-8 gap-1">
-          <UserRoundPlus className="h-3.5 w-3.5 mr-1" />
-          <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-            New Student
-          </span>
-        </Button>
-      </div>
-    </div>
-
-    <div className="flex min-h-[400px] flex-col items-center justify-center rounded-md border-dashed p-8 text-center animate-in fade-in-50">
-      <div className="flex h-20 w-20 items-center justify-center rounded-full bg-primary/10">
-        <UsersRound className="h-12 w-12 text-primary" />
-      </div>
-
-      <h2 className="text-lg font-semibold mt-4">No courses found</h2>
-      <p className="mb-8 mt-2 text-center text-sm leading-6 text-muted-foreground max-w-sm mx-auto">Click &quot;New Course&quot; to get started</p>
-    </div>
-  </>
+    <main className="flex flex-1 flex-col gap-4 p-0 lg:gap-6 lg:pr-4 lg:pl-4 min-h-[80vh]">
+          <div className="flex items-center">
+            <UsersRound className="h-8 w-8 text-primary mr-5" />
+            <h1 className="text-lg font-semibold md:text-2xl">Students</h1>
+          </div>
+          <div className="flex flex-1 items-center justify-center rounded-lg border border-dashed shadow-sm">
+            <div className="flex flex-col items-center gap-2 text-center">
+              <h3 className="text-2xl font-bold tracking-tight">
+                You have no students
+              </h3>
+              <p className="text-sm text-muted-foreground">
+                You can start teaching as soon as you add a student.
+              </p>
+              <Button className="mt-4" asChild>
+                <Link href="/teacher/courses/new">
+                <UserRoundPlus className="h-4 w-4 mr-2" />
+                Add Student
+                </Link>
+              </Button>
+            </div>
+          </div>
+        </main>
   )
 }

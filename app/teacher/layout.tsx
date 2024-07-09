@@ -3,10 +3,11 @@ import Header from "@/components/teacher/Header";
 import { Button } from "@/components/ui/button";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { redirect } from "next/navigation";
+import { Claim } from "@/lib/interface";
 
 export default async function TeacherDashboardLayout({ children}: { children: React.ReactNode }) {
   
-  const { getUser } = getKindeServerSession();
+  const { getUser, getClaim } = getKindeServerSession();
   const user = await getUser();
 
   if (!user) {
@@ -14,13 +15,13 @@ export default async function TeacherDashboardLayout({ children}: { children: Re
   }
 
   return (
-    <div className="flex min-h-screen w-full flex-col">
+    <div className="flex min-h-screen w-full flex-col bg-muted/60">
       <Sidebar />
       <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
         <Header />
-        <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
+        <div className="flex flex-col">
           {children}
-        </main>
+        </div>
       </div>
     </div>
 
