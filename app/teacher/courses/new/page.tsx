@@ -1,26 +1,45 @@
+"use client"
+
+import { createCourse } from "@/app/actions";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Textarea } from "@/components/ui/textarea";
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { Activity, ArrowUpRight, ChevronLeft, CreditCard, DollarSign, Mic, Paperclip, PlusCircle, PlusIcon, TrashIcon, Upload, UserRoundMinus, UserRoundPlus, UserRoundSearch, Users } from "lucide-react";
-import Image from "next/image";
+import { PlusIcon, TrashIcon, UserRoundPlus } from "lucide-react";
+import { useFormState } from "react-dom";
+import { useForm } from "@conform-to/react"
+import { parseWithZod } from "@conform-to/zod";
+import { courseSchema } from "@/lib/zodSchemas";
 import Link from "next/link";
 
 export default function NewCoursePage() {
+
+  const [lastResult, action] = useFormState(createCourse, undefined)
+  const [form, fields] = useForm({
+    lastResult,
+    onValidate({formData}) {
+      return parseWithZod(formData, {
+        schema: courseSchema
+      })
+    },
+    shouldValidate: 'onBlur',
+    shouldRevalidate: 'onInput'
+  })
+
   return (
-    <div>
+    <form id={form.id} onSubmit={form.onSubmit} action={action}>
+      <div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-6xl mx-auto p-4">
         <h1 className="text-2xl font-semibold">Create a New Course</h1>
         <div className="flex gap-2 justify-end">
-          <Button variant="outline">Discard</Button>
-          <Button>Save</Button>
+          <Button variant="outline" asChild>
+            <Link href="/teacher/courses">
+              Discard
+            </Link>
+          </Button>
+          <Button>Create</Button>
         </div>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-6xl mx-auto p-4">
@@ -31,12 +50,24 @@ export default function NewCoursePage() {
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid gap-2">
-            <Label htmlFor="name">Course Name</Label>
-            <Input id="name" placeholder="Enter course name" />
+            <Label htmlFor="title">Course Name</Label>
+            <Input 
+              type="text"
+              key={fields.title.key}
+              name={fields.title.name}
+              defaultValue={fields.title.initialValue}
+              id="title" 
+              placeholder="Enter course name" 
+            />
+            <p className="text-red-500">{fields.title.errors}</p>
           </div>
           <div className="grid gap-2">
             <Label htmlFor="description">Description</Label>
-            <Textarea id="description" placeholder="Provide a course description" className="min-h-[120px]" />
+            <Textarea key={fields.description.key} name={fields.description.name} defaultValue={fields.description.initialValue} id="description" placeholder="Provide a course description" className="min-h-[120px]" />
+            <p className="text-red-500">{fields.title.errors}</p>
+          </div>
+          <div>
+            <input key={fields.status.key} type="hidden" name={fields.status.name} value="NOT_STARTED" />
           </div>
         </CardContent>
       </Card>
@@ -124,5 +155,6 @@ export default function NewCoursePage() {
       </Card>
       </div>
     </div>
+    </form>
   )
 }
